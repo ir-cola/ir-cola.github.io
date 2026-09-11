@@ -1254,6 +1254,13 @@ section {
     opacity: 1;
 }
 
+/* 配布リンクは複数並ぶことがある（GitHub Releases / itch.io など） */
+.work-detail-downloads {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
 /* 配布物の動作環境・操作方法（設定がある作品のみテキストが入る） */
 .work-detail-requirements,
 .work-detail-controls {
