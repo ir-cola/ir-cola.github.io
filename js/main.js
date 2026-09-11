@@ -522,13 +522,26 @@ function openModal(workId) {
 
     // 作品配布：ダウンロードURL
     const dlSection = modal.querySelector('.work-detail-download-section');
-    const dlLink = modal.querySelector('.work-detail-download');
+    const dlWrap = modal.querySelector('.work-detail-downloads');
     const reqEl = modal.querySelector('.work-detail-requirements');
     const ctrlEl = modal.querySelector('.work-detail-controls');
-    if (data.download) {
+    // download は文字列（従来＝Downloadボタン1つ）か [{label:{ja,en}, url}] の配列
+    const dlList = !data.download ? []
+        : (typeof data.download === 'string'
+            ? [{ label: { ja: 'Download', en: 'Download' }, url: data.download }]
+            : data.download);
+    dlWrap.innerHTML = '';
+    if (dlList.length) {
         dlSection.classList.add('has-link');
-        dlLink.href = data.download;
-        dlLink.textContent = 'Download';
+        dlList.forEach(d => {
+            const a = document.createElement('a');
+            a.className = 'work-detail-download';
+            a.href = d.url;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.textContent = (typeof d.label === 'object') ? d.label[lang] : d.label;
+            dlWrap.appendChild(a);
+        });
         // 動作環境・操作方法（設定がある作品のみ）
         const reqLabel = currentLang === 'ja' ? '動作環境：' : 'Requirements: ';
         reqEl.textContent = data.requirements ? reqLabel + data.requirements[lang] : '';
