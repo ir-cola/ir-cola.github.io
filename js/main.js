@@ -355,7 +355,11 @@ const workData = {
         },
         video: { type: 'youtube', src: 'https://www.youtube.com/embed/1onFfMwwZ3w' },
         screenshots: ['images/JumpBeat_Title.webp', 'images/JumpBeat_GamePlay.webp', 'images/JumpBeat_Climb.webp'],
-        download: '',
+        controls: { ja: 'SPACE ジャンプ、A・D 押しっぱなしで斜めへ移動', en: 'SPACE to jump, hold A or D to move diagonally' },
+        download: [
+            { label: { ja: 'ダウンロード（GitHub）', en: 'Download (GitHub)' }, url: 'https://github.com/ir-cola/jumpbeat/releases/tag/v1.0' },
+            { label: { ja: 'itch.io で見る', en: 'View on itch.io' }, url: 'https://ir-games.itch.io/jumpbeat' },
+        ],
     },
     'pettan-maker': {
         title: { ja: 'ぺったんメイカー', en: 'Pettan Maker' },
