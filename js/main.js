@@ -198,7 +198,7 @@ const workData = {
         video: { type: 'placeholder', src: '' },
         screenshots: ['images/puramai9_Overview.webp', 'images/puramai9_Concept.webp', 'images/puramai9_Screen.webp', 'images/puramai9_Rules.webp'],
         download: '',
-        repo: 'https://github.com/IrokawaRikuto/puramai9',
+        repo: 'https://github.com/ir-cola/puramai9',
     },
     'touhou': {
         title: { ja: '東方春三校', en: 'Touhou Harusankou' },
@@ -288,7 +288,7 @@ const workData = {
         video: { type: 'placeholder', src: '' },
         screenshots: [],
         download: '',
-        repo: 'https://github.com/IrokawaRikuto/Re-GAMMA',
+        repo: 'https://github.com/ir-cola/Re-GAMMA',
     },
     'discord-bot': {
         title: { ja: 'Discord BOT', en: 'Discord BOT' },
