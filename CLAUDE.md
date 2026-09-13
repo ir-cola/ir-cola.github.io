@@ -8,7 +8,7 @@
 
 ## 完了済み
 - ダークテーマ（赤アクセント #ff4444）のデザイン
-- セクション: Hero, About, Skills, Works（年カルーセル〔見切れピーク／5秒自動スライド／ドラッグ・スワイプ〕＋全作品の年見出し付き4列グリッド。年選択はクリックでドロップダウン、作用するのはカルーセルのみ）, Contact, Footer
+- セクション: Hero, About, Skills, Works（ピックアップカルーセル〔固定4作品／見切れピーク／5秒自動スライド／ドラッグ・スワイプ〕＋全作品の年見出し付き4列グリッド）, Contact, Footer
 - 言語切り替え（JP/EN）: data-ja/data-en属性方式
 - 作品クリックでモーダル表示（動画/スクリーンショット/説明/タグ/受賞/開発環境/DLリンク対応）
 - モーダルURL対応（#work-gammaなどで直接モーダルが開く、面接官間の共有用）
@@ -330,3 +330,4 @@
 - Firebase Console 側の手動作業:
   - Firestore Database → ルール画面に `firestore.rules` の内容を貼り付けて公開
   - App Check 設定（reCAPTCHA v3 サイトキー取得 → `index.html` の `APP_CHECK_SITE_KEY` に設定 → Firebase Console で reCAPTCHA シークレット登録 → APIs タブで Cloud Firestore を Monitor → 問題なければ Enforce）
+- Works カルーセルを「ピックアップ」固定4作品に変更し、年切替機能を撤去。①`initWorksCarousel` の年グループ化（`order`/`byYear`/`years`/`yi`）を `const featured = ['jump-beat','pettan-maker','rm-engine','sd-mcp']` に置換、`buildYear`→`build`。`setYear`/`buildYearMenu`/`markYearMenu`/`openMenu`/`updateCount` を削除。②HTML の `.wc-yearnav`（`#wc-year-btn`/`#wc-year-menu`/`#wc-year-label`/`#wc-year-count`/`.wc-year-caret`）を削除し `.wc-head > .wc-head-label`（「ピックアップ」/ Pick Up、data-ja/en）に差し替え。③CSS の `.wc-yearnav`〜`.wc-year-opt-n` を削除し `.wc-head`/`.wc-head-label` を追加。見切れピーク・無限ループ・自動スライド・矢印・ドット・ドラッグ・カード→モーダルは従来どおり。下段グリッド（全作品・年見出し・検索/タグ絞り込み）は変更なし。Playwright 確認済み（カード12=4×3連／ドット4／年UI無し／グリッド14件・年見出し3つ・コンソールエラー無し）
