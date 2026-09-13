@@ -686,29 +686,16 @@ document.querySelectorAll('.work-card[data-work]').forEach(card => {
     if (!track) return;
     const viewport = track.parentElement;               // .wc-viewport
     const carousel = document.querySelector('.works-carousel');
-    const yearLabel = document.getElementById('wc-year-label');
-    const yearCount = document.getElementById('wc-year-count');
     const dotsWrap = document.getElementById('wc-dots');
-    const yearBtn = document.getElementById('wc-year-btn');
-    const yearMenu = document.getElementById('wc-year-menu');
     const cPrev = document.getElementById('wc-prev');
     const cNext = document.getElementById('wc-next');
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const AUTO_MS = 5000;
 
-    // Works の表示順（HTMLグリッドの data-work 順）を保ったまま年でグループ化
-    const order = ['jump-beat', 'pettan-maker', 'rm-engine', 'puramai9', 'sd-mcp', 'discord-bot',
-                   'gamma-plus', 'sand-tetris', 'console-shooter', 'gamma', 'blast-ball', 'blade-slash', 'circlestriker', 'touhou'];
-    const byYear = {};
-    order.forEach(id => {
-        const d = workData[id];
-        if (!d) return;
-        (byYear[d.year] = byYear[d.year] || []).push(id);
-    });
-    const years = Object.keys(byYear).sort((a, b) => b - a); // 新しい順
-    let yi = 0;      // 年インデックス
+    // ピックアップに出す作品（固定・年は関係なし）
+    const featured = ['jump-beat', 'pettan-maker', 'rm-engine', 'sd-mcp'].filter(id => workData[id]);
     let pos = 0;     // 3連トラック上の位置（中央コピー基準）
-    let n = 0;       // その年の件数
+    let n = 0;       // 件数
     let autoTimer = null;
 
     const esc = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -773,12 +760,8 @@ document.querySelectorAll('.work-card[data-work]').forEach(card => {
 
     function go(delta) { if (n <= 1) return; pos += delta; place(true); }
 
-    function updateCount() {
-        yearCount.textContent = byYear[years[yi]].length + (currentLang === 'ja' ? ' 作品' : ' works');
-    }
-
-    function buildYear() {
-        const list = byYear[years[yi]];
+    function build() {
+        const list = featured;
         n = list.length;
         // n>1 は3連（見切れ＋無限ループ用）、n===1 は単体
         const seq = n > 1 ? list.concat(list).concat(list) : list.slice();
@@ -791,53 +774,11 @@ document.querySelectorAll('.work-card[data-work]').forEach(card => {
             b.addEventListener('click', () => { pos = (n > 1 ? n : 0) + i; place(true); restartAuto(); });
             dotsWrap.appendChild(b);
         }
-        yearLabel.textContent = years[yi];
-        updateCount();
-        markYearMenu();
         const single = n <= 1;
         cPrev.disabled = single;
         cNext.disabled = single;
         pos = n > 1 ? n : 0;     // 中央コピーの先頭
         place(false);
-    }
-
-    // 年ドロップダウン（クリックで一覧を出して選択）。下グリッドは年に関係なく常に全作品を表示
-    function buildYearMenu() {
-        yearMenu.innerHTML = years.map((y, i) =>
-            '<li role="option" class="wc-year-opt" data-yi="' + i + '">' + y + '<span class="wc-year-opt-n">' + byYear[y].length + '</span></li>'
-        ).join('');
-    }
-    function markYearMenu() {
-        Array.prototype.forEach.call(yearMenu.children, (li, i) => {
-            li.classList.toggle('sel', i === yi);
-            li.setAttribute('aria-selected', i === yi ? 'true' : 'false');
-        });
-    }
-    function openMenu(o) {
-        const open = (o === undefined) ? !yearMenu.classList.contains('open') : o;
-        yearMenu.classList.toggle('open', open);
-        yearBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
-    }
-
-    // 年切替：カルーセルのみスライド＋フェード（下グリッドは常に全作品なので触らない）
-    function setYear(newYi, dir) {
-        if (newYi === yi || newYi < 0 || newYi >= years.length) return;
-        stopAuto();
-        if (reduce) { yi = newYi; buildYear(); startAuto(); return; }
-        viewport.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
-        viewport.style.opacity = '0';
-        viewport.style.transform = 'translateX(' + (dir > 0 ? -36 : 36) + 'px)';
-        setTimeout(() => {
-            yi = newYi;
-            buildYear();
-            viewport.style.transition = 'none';
-            viewport.style.transform = 'translateX(' + (dir > 0 ? 36 : -36) + 'px)';
-            void viewport.offsetWidth;
-            viewport.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
-            viewport.style.opacity = '1';
-            viewport.style.transform = 'translateX(0)';
-            startAuto();
-        }, 240);
     }
 
     function startAuto() { if (reduce || n <= 1) return; stopAuto(); autoTimer = setInterval(() => go(1), AUTO_MS); }
@@ -892,27 +833,14 @@ document.querySelectorAll('.work-card[data-work]').forEach(card => {
 
     cPrev.addEventListener('click', () => { go(-1); restartAuto(); });
     cNext.addEventListener('click', () => { go(1); restartAuto(); });
-    // 年ドロップダウン：ボタンで開閉、項目クリックでその年へ
-    yearBtn.addEventListener('click', e => { e.stopPropagation(); openMenu(); });
-    yearMenu.addEventListener('click', e => {
-        const li = e.target.closest('.wc-year-opt');
-        if (!li) return;
-        e.stopPropagation();
-        const ni = +li.dataset.yi;
-        openMenu(false);
-        if (ni !== yi) setYear(ni, ni > yi ? 1 : -1);
-    });
-    document.addEventListener('click', () => openMenu(false));
     if (carousel) {
         carousel.addEventListener('mouseenter', stopAuto);
         carousel.addEventListener('mouseleave', startAuto);
     }
     window.addEventListener('resize', () => place(false));
-    if (langBtn) langBtn.addEventListener('click', () => updateCount());
     document.addEventListener('visibilitychange', () => { if (document.hidden) stopAuto(); else startAuto(); });
 
-    buildYearMenu();
-    buildYear();
+    build();
     startAuto();
 })();
 
