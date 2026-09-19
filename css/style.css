@@ -1254,6 +1254,20 @@ section {
     white-space: pre-line;
 }
 
+/* 権利表記・注記（二次創作である旨の明示など） */
+.work-detail-notice {
+    margin-top: 20px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.03);
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    white-space: pre-line;
+}
+
 @media (max-width: 768px) {
     .work-detail-grid {
         grid-template-columns: 1fr;
