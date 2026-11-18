@@ -866,8 +866,8 @@ section {
 /* ===== Works: 年カルーセル ===== */
 /* カルーセルは画面幅いっぱい（フルブリード）＝コンテナ幅で見切れず端まで表示 */
 .works-carousel {
-    --wc-w: 56%;
-    margin-bottom: 52px;
+    --wc-w: 42%;
+    margin-bottom: 28px;
     width: 100vw;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
@@ -911,7 +911,7 @@ section {
 .wc-arrow:disabled { opacity: 0.25; cursor: default; }
 .wc-viewport { width: 100%; overflow: hidden; touch-action: pan-y; }
 .wc-viewport.dragging { cursor: grabbing; }
-.wc-track { display: flex; gap: 20px; transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1); }
+.wc-track { display: flex; gap: 0; transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1); }
 /* スナップ（無限ループ折り返し）中はトラック移動もカードの明暗もアニメさせない＝一瞬のカクつき防止 */
 .wc-track.wc-snap, .wc-track.wc-snap .wc-card { transition: none !important; }
 .wc-card {
@@ -920,38 +920,38 @@ section {
     user-select: none;
     -webkit-user-select: none;
     -webkit-user-drag: none;
-    opacity: 0.32;
-    transform: scale(0.9);
-    transition: opacity 0.45s ease, transform 0.45s ease;
 }
-.wc-card.active { opacity: 1; transform: scale(1); }
 .wc-media {
     position: relative;
     aspect-ratio: 16 / 9;
     background: #12121a;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
+    border: none;
+    border-radius: 0;
     overflow: hidden;
     display: grid;
     place-items: center;
-    transition: border-color 0.35s, box-shadow 0.35s;
-}
-.wc-card.active .wc-media {
-    border-color: rgba(255, 68, 68, 0.5);
-    box-shadow: 0 12px 44px rgba(0, 0, 0, 0.55);
 }
 .wc-media img { width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; pointer-events: none; }
 .wc-media .media-placeholder { height: 100%; border-bottom: none; background: #12121a; }
-.wc-title { text-align: center; margin-top: 14px; font-size: 1.15rem; font-weight: 700; }
-.wc-dots { display: flex; gap: 8px; justify-content: center; margin-top: 24px; }
+.wc-title {
+    text-align: center;
+    margin-top: 12px;
+    padding: 0 14px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.wc-dots { display: flex; gap: 8px; justify-content: center; margin-top: 16px; }
 .wc-dot {
     width: 9px; height: 9px; border-radius: 50%;
     background: var(--border); border: none; padding: 0; cursor: pointer;
     transition: background 0.2s, transform 0.2s;
 }
 .wc-dot.on { background: var(--accent); transform: scale(1.25); }
-@media (max-width: 1024px) { .works-carousel { --wc-w: 68%; } }
-@media (max-width: 600px) { .works-carousel { --wc-w: 84%; } .wc-arrow { width: 38px; height: 38px; } }
+@media (max-width: 1024px) { .works-carousel { --wc-w: 52%; } }
+@media (max-width: 600px) { .works-carousel { --wc-w: 72%; } .wc-arrow { width: 38px; height: 38px; } }
 
 .work-card {
     scroll-margin-top: 80px;
