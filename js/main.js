@@ -250,65 +250,68 @@ const workData = {
         screenshots: ['images/gamma_screenshot.webp'],
         download: '',
     },
-    'blast-ball': {
-        title: { ja: 'ブラストボール', en: 'Blast Ball' },
-        year: '2025',
-        tags: ['C++', 'DirectX'],
-        award: null,
-        env: 'Visual Studio / DirectX11',
-        desc: {
-            ja: 'C++・DirectX で制作したゲーム。',
-            en: 'A game developed with C++ and DirectX. '
+    /* 非表示中（2026-11）: ブラストボール / ブレードスラッシュ / GAMMA+ / Discord BOT。
+       再表示するときはこのコメントを外す（index.html 側の該当 .work-card もコメントアウト済み）
+        'blast-ball': {
+            title: { ja: 'ブラストボール', en: 'Blast Ball' },
+            year: '2025',
+            tags: ['C++', 'DirectX'],
+            award: null,
+            env: 'Visual Studio / DirectX11',
+            desc: {
+                ja: 'C++・DirectX で制作したゲーム。',
+                en: 'A game developed with C++ and DirectX. '
+            },
+            video: { type: 'placeholder', src: '' },
+            screenshots: [],
+            download: '',
         },
-        video: { type: 'placeholder', src: '' },
-        screenshots: [],
-        download: '',
-    },
-    'blade-slash': {
-        title: { ja: 'ブレードスラッシュ', en: 'Blade Slash' },
-        year: '2025',
-        tags: [{ ja: '課題制作：個人', en: 'Assignment: Solo' }, 'OpenGL'],
-        award: null,
-        env: 'Nintendo Switch / OpenGL',
-        desc: {
-            ja: 'Nintendo Switch 向けに制作した課題制作のゲーム。OpenGL を用いて実装。',
-            en: 'A solo assignment game developed for the Nintendo Switch, implemented using OpenGL. '
+        'blade-slash': {
+            title: { ja: 'ブレードスラッシュ', en: 'Blade Slash' },
+            year: '2025',
+            tags: [{ ja: '課題制作：個人', en: 'Assignment: Solo' }, 'OpenGL'],
+            award: null,
+            env: 'Nintendo Switch / OpenGL',
+            desc: {
+                ja: 'Nintendo Switch 向けに制作した課題制作のゲーム。OpenGL を用いて実装。',
+                en: 'A solo assignment game developed for the Nintendo Switch, implemented using OpenGL. '
+            },
+            video: { type: 'placeholder', src: '' },
+            screenshots: [],
+            download: '',
         },
-        video: { type: 'placeholder', src: '' },
-        screenshots: [],
-        download: '',
-    },
-    'gamma-plus': {
-        title: { ja: 'GAMMA+', en: 'GAMMA+' },
-        year: '2026',
-        period: { ja: '約1ヶ月（原作GAMMAの約4ヶ月を含めると約5ヶ月）', en: 'About 1 month (about 5 months including the ~4 months on the original GAMMA)' },
-        tags: ['C++', 'DirectX', { ja: 'リメイク', en: 'Remake' }, { ja: '個人制作', en: 'Personal' }],
-        award: null,
-        env: 'Visual Studio / DirectX11 / Claude Code Pro',
-        desc: {
-            ja: '2年次のチーム制作『GAMMA』を、当時の心残りを踏まえて個人でブラッシュアップしたリメイク作品。ゲームコンセプトはそのままに、操作感の改善、各種バグの修正、攻撃・被弾・演出系のエフェクト追加、STAGE構成とUIの全面刷新を行い、ゲームとしての完成度を一段引き上げた。「当時もっとこうしたかった」を一つずつ潰し、見た目と触り心地の両面から仕上げ直した一作。',
-            en: 'A solo remake of GAMMA, the team project I worked on in my 2nd year, revisited and brushed up with everything I had learned since. The core game concept is unchanged, but controls have been refined, bugs squashed, attack/hit/presentation effects added, and the stage layout and UI fully redesigned — addressing the issues I could not resolve back then and pushing the overall polish another step forward.'
+        'gamma-plus': {
+            title: { ja: 'GAMMA+', en: 'GAMMA+' },
+            year: '2026',
+            period: { ja: '約1ヶ月（原作GAMMAの約4ヶ月を含めると約5ヶ月）', en: 'About 1 month (about 5 months including the ~4 months on the original GAMMA)' },
+            tags: ['C++', 'DirectX', { ja: 'リメイク', en: 'Remake' }, { ja: '個人制作', en: 'Personal' }],
+            award: null,
+            env: 'Visual Studio / DirectX11 / Claude Code Pro',
+            desc: {
+                ja: '2年次のチーム制作『GAMMA』を、当時の心残りを踏まえて個人でブラッシュアップしたリメイク作品。ゲームコンセプトはそのままに、操作感の改善、各種バグの修正、攻撃・被弾・演出系のエフェクト追加、STAGE構成とUIの全面刷新を行い、ゲームとしての完成度を一段引き上げた。「当時もっとこうしたかった」を一つずつ潰し、見た目と触り心地の両面から仕上げ直した一作。',
+                en: 'A solo remake of GAMMA, the team project I worked on in my 2nd year, revisited and brushed up with everything I had learned since. The core game concept is unchanged, but controls have been refined, bugs squashed, attack/hit/presentation effects added, and the stage layout and UI fully redesigned — addressing the issues I could not resolve back then and pushing the overall polish another step forward.'
+            },
+            video: { type: 'placeholder', src: '' },
+            screenshots: [],
+            download: '',
+            repo: 'https://github.com/ir-cola/Re-GAMMA',
         },
-        video: { type: 'placeholder', src: '' },
-        screenshots: [],
-        download: '',
-        repo: 'https://github.com/ir-cola/Re-GAMMA',
-    },
-    'discord-bot': {
-        title: { ja: 'Discord BOT', en: 'Discord BOT' },
-        year: '2026',
-        period: { ja: '1週間（現在休止中）', en: '1 week (currently on hold)' },
-        tags: ['Discord', { ja: '個人制作', en: 'Personal' }, { ja: '休止中', en: 'On Hold' }],
-        award: null,
-        env: '',
-        desc: {
-            ja: '個人で開発・運用している Discord BOT。',
-            en: 'A Discord bot I developed and operate personally. '
+        'discord-bot': {
+            title: { ja: 'Discord BOT', en: 'Discord BOT' },
+            year: '2026',
+            period: { ja: '1週間（現在休止中）', en: '1 week (currently on hold)' },
+            tags: ['Discord', { ja: '個人制作', en: 'Personal' }, { ja: '休止中', en: 'On Hold' }],
+            award: null,
+            env: '',
+            desc: {
+                ja: '個人で開発・運用している Discord BOT。',
+                en: 'A Discord bot I developed and operate personally. '
+            },
+            video: { type: 'placeholder', src: '' },
+            screenshots: [],
+            download: '',
         },
-        video: { type: 'placeholder', src: '' },
-        screenshots: [],
-        download: '',
-    },
+    */
     'sd-mcp': {
         title: { ja: 'Stable Diffusion MCP', en: 'Stable Diffusion MCP' },
         year: '2026',
@@ -381,8 +384,9 @@ const workData = {
             ja: '敵をつぶしてシールにし、そのシールをからだに貼ることで効果を発動してボスを倒していく3Dアクションゲーム。ステージごとに童話をモチーフにした世界観が用意されており、STAGE1は「不思議の国のアリス」をテーマに、ボスとして「ハートの女王」が登場する。HAL東京の3年次チーム制作（NullPointerGames）として現在開発中。',
             en: 'A 3D action game where you defeat enemies, turn them into stickers, and stick them onto your body to activate their effects and take down bosses. Each stage is themed around a fairy tale — STAGE 1 is inspired by "Alice in Wonderland," featuring the Queen of Hearts as a boss. Currently in development as a 3rd-year team project at HAL Tokyo (NullPointerGames).'
         },
-        video: { type: 'video', src: 'videos/PettanMaker_PV.mp4' },
+        video: { type: 'youtube', src: 'https://www.youtube.com/embed/9PdWgWWiGE8' },
         screenshots: [
+            'images/PettanMaker_Title2.webp',
             'images/PettanMaker_Title.webp',
             'images/PettanMaker_ConceptArt.webp',
             'images/PettanMaker_Logo.webp',
