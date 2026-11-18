@@ -282,6 +282,68 @@ img {
     text-align: left;
 }
 
+/* Hero 背景：全作品のサムネを4段に並べて左へ流し続けるコラージュ */
+.hero-collage {
+    --hc-gap: 10px;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+.hc-rows {
+    display: grid;
+    grid-template-rows: repeat(4, 1fr);
+    gap: var(--hc-gap);
+    height: 100%;
+}
+.hc-row { overflow: hidden; }
+.hc-track {
+    display: flex;
+    height: 100%;
+    width: max-content;
+    /* タイルは2周ぶん並べてあるので -50% で1周＝継ぎ目なくループ */
+    animation: hc-scroll var(--hc-dur, 70s) linear infinite;
+    animation-delay: var(--hc-delay, 0s);
+    will-change: transform;
+}
+.hc-tile {
+    flex: 0 0 auto;
+    height: 100%;
+    aspect-ratio: 16 / 9;
+    /* gap ではなく margin-right：ループ幅をタイル幅＋余白の整数倍に揃えるため */
+    margin-right: var(--hc-gap);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--bg-card);
+}
+.hc-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.62;
+    filter: brightness(0.9) saturate(0.95);
+}
+/* 名前が読めるように上から暗幕をかける（文字のある左ほど濃く） */
+.hero-collage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(90deg, rgba(10, 10, 15, 0.96) 0%, rgba(10, 10, 15, 0.9) 38%, rgba(10, 10, 15, 0.8) 100%),
+        linear-gradient(180deg, rgba(10, 10, 15, 0.7) 0%, rgba(10, 10, 15, 0) 22%, rgba(10, 10, 15, 0) 78%, rgba(10, 10, 15, 0.85) 100%);
+}
+@keyframes hc-scroll {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-50%, 0, 0); }
+}
+/* 背景モーションOFF（ナビのオプション）と「動きを減らす」設定では停止 */
+html.bg-motion-off .hc-track { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+    .hc-track { animation: none; }
+}
+
 .hero-sub {
     font-size: 0.9rem;
     letter-spacing: 0.2em;
@@ -1495,7 +1557,9 @@ footer {
 @media (max-width: 768px) {
     #hero {
         justify-content: center;
-        padding-left: 0;
+        /* 0 だと名前が画面端にくっつくので左右に余白を残す */
+        padding-left: 24px;
+        padding-right: 24px;
     }
     .hero-title {
         font-size: clamp(2.2rem, 8.5vw, 3.6rem);

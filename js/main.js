@@ -62,16 +62,72 @@ const bgToggle = document.getElementById('bg-anim-toggle');
 const bgSaved = localStorage.getItem('bgAnimEnabled');
 let bgEnabled = bgSaved !== 'false';
 bgToggle.setAttribute('aria-checked', bgEnabled ? 'true' : 'false');
+// Hero のコラージュは CSS アニメなので、クラスで再生/停止を切り替える
+document.documentElement.classList.toggle('bg-motion-off', !bgEnabled);
 
 bgToggle.addEventListener('click', () => {
     bgEnabled = !bgEnabled;
     bgToggle.setAttribute('aria-checked', bgEnabled ? 'true' : 'false');
     localStorage.setItem('bgAnimEnabled', bgEnabled ? 'true' : 'false');
+    document.documentElement.classList.toggle('bg-motion-off', !bgEnabled);
     if (window.bgAnimation) {
         if (bgEnabled) window.bgAnimation.start();
         else window.bgAnimation.stop();
     }
 });
+
+// ===== Hero 背景：全作品のサムネを4段に並べて左へ流し続ける =====
+// タイルは images/hero/ に 480x270(16:9) で切り出した軽量版を置いてある
+// （元画像から `convert <src> -resize 480x270^ -gravity center -extent 480x270` で生成）。
+// 作品の画像を増やしたら、同じ手順でタイルを作ってこの配列に足す。
+(function initHeroCollage() {
+    const rowsWrap = document.getElementById('hc-rows');
+    if (!rowsWrap) return;
+
+    const ROWS = 4;
+    // Works の並び（新しい順）どおりに列挙。4段へ順番に配っていくので各段に作品が散る
+    const tiles = [
+        'JumpBeat_Title', 'JumpBeat_GamePlay', 'JumpBeat_Climb',
+        'PettanMaker_Title2', 'PettanMaker_Title', 'PettanMaker_ConceptArt', 'PettanMaker_Logo',
+        'PettanMaker_GamePlay', 'PettanMaker_Sticker', 'PettanMaker_Clear',
+        'RMEngine_Icon', 'RMEngine_Launcher', 'RMEngine_SceneView', 'RMEngine_UIView', 'RMEngine_GameView',
+        'puramai9_Overview', 'puramai9_Concept', 'puramai9_Screen', 'puramai9_Rules',
+        'SDMCP_icon',
+        'SANDTETRIS_Title', 'SANDTETRIS_GamePlay',
+        'ConsoleSTG_Title', 'ConsoleSTG_StageSelect', 'ConsoleSTG_GamePlay',
+        'gamma_screenshot',
+        'CircleStrikerLogo',
+        'Touhou_Title', 'Touhou_GamePlay',
+    ];
+
+    const lanes = Array.from({ length: ROWS }, () => []);
+    tiles.forEach((name, i) => lanes[i % ROWS].push(name));
+
+    const frag = document.createDocumentFragment();
+    lanes.forEach((lane, r) => {
+        const row = document.createElement('div');
+        row.className = 'hc-row';
+        const track = document.createElement('div');
+        track.className = 'hc-track';
+        // 速度を段で揃えるため、尺は枚数に比例させる。段ごとに位相をずらして見た目を散らす
+        track.style.setProperty('--hc-dur', (lane.length * 9) + 's');
+        track.style.setProperty('--hc-delay', '-' + (r * 11) + 's');
+        // 同じ並びを2周ぶん置いて -50% まで動かす＝継ぎ目なしでループ
+        lane.concat(lane).forEach(name => {
+            const tile = document.createElement('div');
+            tile.className = 'hc-tile';
+            const img = document.createElement('img');
+            img.src = 'images/hero/' + name + '.webp';
+            img.alt = '';
+            img.decoding = 'async';
+            tile.appendChild(img);
+            track.appendChild(tile);
+        });
+        row.appendChild(track);
+        frag.appendChild(row);
+    });
+    rowsWrap.appendChild(frag);
+})();
 
 // スクロールアニメーション（フェードイン）
 const observerOptions = {
