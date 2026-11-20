@@ -404,6 +404,7 @@ const workData = {
             'images/RMEngine_GameView.png'
         ],
         download: '',
+        repo: 'https://github.com/ir-cola/RMEngine',
     },
     'fourorders': {
         title: { ja: '4ORDERS', en: '4ORDERS' },
