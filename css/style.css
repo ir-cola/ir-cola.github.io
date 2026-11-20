@@ -156,6 +156,7 @@ img {
     --r: 2.4;                 /* 中心からシェブロンまでの距離（u 倍） */
     --ang: 45deg;             /* 折れ角 */
     --sc: 0.78;               /* 開いたときの腕の長さ */
+    --rot-delay: 0.18s;       /* 閉じるとき: 折れが戻り始めてから回る */
     display: flex;
     background: none;
     border: none;
@@ -166,18 +167,26 @@ img {
     align-items: center;
     justify-content: center;
     border-radius: 4px;
-    /* 閉じるときは「伸びてから回る」ので回転を後ろにずらす */
-    transition: background 0.2s, transform 0.3s cubic-bezier(0.3, 0.7, 0.3, 1) 0.35s;
+    -webkit-tap-highlight-color: transparent;
+    /* 回転の遅延だけ --rot-delay で開閉を入れ替える。gap（押し込み）は遅延なしで即反応させる */
+    transition: background 0.2s,
+                gap 0.16s ease,
+                transform 0.42s cubic-bezier(0.4, 0, 0.2, 1) var(--rot-delay);
+}
+/* 押している間は線の間隔を詰めて中央に寄せる。離すと戻りながら変形が始まる */
+.nav-toggle:active {
+    gap: calc(0.9 * var(--u));
 }
 .nav-toggle:hover {
     background: rgba(255, 255, 255, 0.06);
 }
 .nav-toggle span {
+    --bar-delay: 0s;          /* 閉じるとき: 折れ戻しが先 */
     position: relative;
     display: block;
     width: calc(11 * var(--u));
     height: var(--u);
-    transition: transform 0.35s cubic-bezier(0.3, 0.7, 0.3, 1) 0s;
+    transition: transform 0.44s cubic-bezier(0.25, 0.8, 0.3, 1) var(--bar-delay);
 }
 .nav-toggle span::before,
 .nav-toggle span::after {
@@ -187,7 +196,7 @@ img {
     height: 100%;
     background: var(--text);
     border-radius: 999px;
-    transition: transform 0.35s cubic-bezier(0.3, 0.7, 0.3, 1) 0s;
+    transition: transform 0.44s cubic-bezier(0.25, 0.8, 0.3, 1) var(--bar-delay);
 }
 .nav-toggle span::before {
     left: 0;
@@ -200,15 +209,15 @@ img {
     transform-origin: calc(var(--u) / 2) center;
 }
 
-/* 開く: ① 全体が90度回転 ② 各バーが折れて散る（回転のぶんだけ遅らせる） */
+/* 開く: ① 全体が90度回転 ② 各バーが折れて散る。
+   ②は①の途中（0.18秒）から始めて重ねる。きっちり待たせると中間で一度止まって見えるため、
+   最初から最後までひと続きの動きになるようにしてある。 */
 .nav-toggle[aria-expanded="true"] {
+    --rot-delay: 0s;
     transform: rotate(90deg);
-    transition-delay: 0s, 0s;
 }
-.nav-toggle[aria-expanded="true"] span,
-.nav-toggle[aria-expanded="true"] span::before,
-.nav-toggle[aria-expanded="true"] span::after {
-    transition-delay: 0.3s;
+.nav-toggle[aria-expanded="true"] span {
+    --bar-delay: 0.18s;
 }
 /* 折れる向きはバーごとに変える（--dir: 1 = ∧ / -1 = ∨）。
    向きを選べるようにすると、左右のバーは回転ゼロのまま折れるだけで済む。
@@ -234,7 +243,7 @@ img {
    折れ（::before / ::after）だけが後半に残るので、見た目は「上に上がってV字に開く」だけになる。 */
 .nav-toggle[aria-expanded="true"] span:nth-child(2) {
     transform: translate(calc(-1 * var(--r) * var(--u)), 0) rotate(-90deg);
-    transition-delay: 0s;
+    --bar-delay: 0s;
 }
 .nav-toggle[aria-expanded="true"] span:nth-child(3) {
     transform: translate(0, calc(var(--r) * var(--u) - 3.5 * var(--u)));
