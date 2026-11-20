@@ -153,10 +153,14 @@ img {
    半分ずつが中央で u/2 だけ重なるので、閉じているときは継ぎ目が見えない。 */
 .nav-toggle {
     --u: 2px;                 /* 線の太さ＝全体の基準単位 */
-    --r: 2.4;                 /* 中心からシェブロンまでの距離（u 倍） */
+    --r: 2.4;                 /* 中心から上のシェブロンまでの距離（u 倍） */
+    --rx: 3.6;                /* 中心から左右のシェブロンまでの距離。上のシェブロンと
+                                 重ならないよう --r より広くとる */
     --ang: 45deg;             /* 折れ角 */
     --sc: 0.78;               /* 開いたときの腕の長さ */
     --rot-delay: 0.18s;       /* 閉じるとき: 折れが戻り始めてから回る */
+    --t-rot: 0.42s;           /* 回転の尺。中央バーの打ち消し回転と必ず揃える */
+    --e-rot: cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     background: none;
     border: none;
@@ -171,7 +175,7 @@ img {
     /* 回転の遅延だけ --rot-delay で開閉を入れ替える。gap（押し込み）は遅延なしで即反応させる */
     transition: background 0.2s,
                 gap 0.16s ease,
-                transform 0.42s cubic-bezier(0.4, 0, 0.2, 1) var(--rot-delay);
+                transform var(--t-rot) var(--e-rot) var(--rot-delay);
 }
 /* 押している間は線の間隔を詰めて中央に寄せる。離すと戻りながら変形が始まる */
 .nav-toggle:active {
@@ -234,19 +238,25 @@ img {
 .nav-toggle span:nth-child(1) { --dir: -1; }   /* 右: ∨ 向きに折る */
 .nav-toggle span:nth-child(2) { --dir: -1; }   /* 上: ∨ 向きに折る */
 .nav-toggle span:nth-child(3) { --dir: 1; }    /* 左: ∧ 向きに折る */
-/* 左右のバーは回さず、わずかに内側へ寄って折れるだけ */
+/* 左右のバーは回さず、横位置をずらして折れるだけ。
+   --r のままだと上のシェブロンと腕の先が重なるので、--rx まで外へ広げている。 */
 .nav-toggle[aria-expanded="true"] span:nth-child(1) {
-    transform: translate(0, calc(3.5 * var(--u) - var(--r) * var(--u)));
+    transform: translate(0, calc(3.5 * var(--u) - var(--rx) * var(--u)));
 }
-/* 中央は画面上で一切回さない。全体の90度回転を -90度で打ち消す分を「前半」に回して
-   （transition-delay: 0s）、回転と同時に相殺させ、水平のまま上へスライドさせる。
-   折れ（::before / ::after）だけが後半に残るので、見た目は「上に上がってV字に開く」だけになる。 */
+/* 中央は画面上で一切回さない。全体の90度回転を -90度で打ち消し、水平のまま上へスライドさせる。
+   打ち消しなので、ボタンの回転とまったく同じ尺・曲線・遅延で動かさなければならない
+   （--t-rot / --e-rot / --rot-delay を共有）。ずらすと打ち消しきれない時間ができて、
+   とくに閉じるときに中央の線が一瞬縦に立ってしまう。
+   折れ（::before / ::after）は他のバーと同じく --bar-delay 側に残るので、
+   見た目は「上に上がってV字に開く」だけになる。 */
+.nav-toggle span:nth-child(2) {
+    transition: transform var(--t-rot) var(--e-rot) var(--rot-delay);
+}
 .nav-toggle[aria-expanded="true"] span:nth-child(2) {
     transform: translate(calc(-1 * var(--r) * var(--u)), 0) rotate(-90deg);
-    --bar-delay: 0s;
 }
 .nav-toggle[aria-expanded="true"] span:nth-child(3) {
-    transform: translate(0, calc(var(--r) * var(--u) - 3.5 * var(--u)));
+    transform: translate(0, calc(var(--rx) * var(--u) - 3.5 * var(--u)));
 }
 
 .nav-dropdown {
