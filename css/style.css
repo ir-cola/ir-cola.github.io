@@ -1805,3 +1805,89 @@ footer {
 /* カードのstagger（遅延表示） */
 .fade-in.stagger-1 { transition-delay: 0.1s; }
 .fade-in.stagger-2 { transition-delay: 0.2s; }
+
+/* ===== オープニング演出（初回のみ。html.intro-pending が付いている間だけ有効） ===== */
+/* 覆い：ナビ(z-index 100)より下に置くことで、ハンバーガーとENボタンは最初から見える */
+.intro-root {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    overflow: hidden;
+    /* 破片は JS で作るので、それまでの一瞬に Hero が見えないよう覆い自体も塗っておく */
+    background: var(--bg);
+}
+html:not(.intro-pending) .intro-root,
+html:not(.intro-pending) .intro-logo { display: none; }
+
+/* 画面を覆う破片。1枚ずつ clip-path で切り出した同じ背景色の板 */
+.intro-shard {
+    position: absolute;
+    inset: 0;
+    background-color: var(--bg);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+}
+/* ひび割れの線（破片の上に描く） */
+.intro-cracks {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* 中央 → 左上へ飛ぶアイコン。ナビより上を通す */
+.intro-logo {
+    position: fixed;
+    z-index: 150;
+    opacity: 0;
+    pointer-events: none;
+    will-change: transform, opacity;
+}
+
+/* --- 演出中の初期状態と、クラス付与での出現 --- */
+html.intro-pending body { overflow: hidden; }
+
+/* ナビのロゴ：飛んできたアイコンが着地した瞬間に入れ替える */
+html.intro-pending .nav-logo-icon { opacity: 0; transition: opacity 0.25s ease; }
+html.intro-pending.intro-landed .nav-logo-icon { opacity: 1; }
+
+/* ナビのリンク：左から順に上から落ちてくる */
+html.intro-pending .nav-links li {
+    opacity: 0;
+    transform: translateY(-26px);
+    transition: opacity 0.45s ease, transform 0.55s cubic-bezier(0.2, 0.75, 0.3, 1);
+}
+html.intro-pending .nav-links li:nth-child(1) { transition-delay: 0s; }
+html.intro-pending .nav-links li:nth-child(2) { transition-delay: 0.09s; }
+html.intro-pending .nav-links li:nth-child(3) { transition-delay: 0.18s; }
+html.intro-pending .nav-links li:nth-child(4) { transition-delay: 0.27s; }
+html.intro-pending.intro-nav .nav-links li { opacity: 1; transform: none; }
+
+/* 名前：右から左へ寄りながらフェードイン */
+html.intro-pending .hero-content {
+    opacity: 0;
+    transform: translateX(64px);
+    transition: opacity 0.75s ease, transform 0.85s cubic-bezier(0.2, 0.75, 0.3, 1);
+}
+html.intro-pending.intro-hero .hero-content { opacity: 1; transform: none; }
+
+/* Works ボタン：下から上へ。既存の translateX(-50%) を保つ */
+html.intro-pending .hero-btn-wrap {
+    opacity: 0;
+    transform: translateX(-50%) translateY(54px);
+    transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.2, 0.75, 0.3, 1);
+}
+html.intro-pending.intro-btn .hero-btn-wrap { opacity: 1; transform: translateX(-50%); }
+/* 砕けた瞬間の一瞬の光 */
+.intro-flash {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.42s ease-out;
+    background: radial-gradient(circle at 50% 50%,
+        rgba(255, 255, 255, 0.5) 0%,
+        rgba(255, 68, 68, 0.28) 22%,
+        rgba(255, 68, 68, 0) 62%);
+}
