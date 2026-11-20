@@ -210,23 +210,34 @@ img {
 .nav-toggle[aria-expanded="true"] span::after {
     transition-delay: 0.3s;
 }
+/* 折れる向きはバーごとに変える（--dir: 1 = ∧ / -1 = ∨）。
+   向きを選べるようにすると、左右のバーは回転ゼロのまま折れるだけで済む。
+   同じ向きに揃えると右のバーが180度回り込む羽目になり、動きが大きく不自然になる。 */
 .nav-toggle[aria-expanded="true"] span::before {
-    transform: rotate(calc(-1 * var(--ang))) scaleX(var(--sc));
+    transform: rotate(calc(-1 * var(--dir) * var(--ang))) scaleX(var(--sc));
 }
 .nav-toggle[aria-expanded="true"] span::after {
-    transform: rotate(var(--ang)) scaleX(var(--sc));
+    transform: rotate(calc(var(--dir) * var(--ang))) scaleX(var(--sc));
 }
 /* 縦3本になったときの左右位置を保ったまま内側へ折れる
    （入れ替えると一番左の線が右端まで横断してしまう）
    90度回転後の画面上の並び: 1本目=右 / 2本目=中央 / 3本目=左 */
+.nav-toggle span:nth-child(1) { --dir: -1; }   /* 右: ∨ 向きに折る */
+.nav-toggle span:nth-child(2) { --dir: -1; }   /* 上: ∨ 向きに折る */
+.nav-toggle span:nth-child(3) { --dir: 1; }    /* 左: ∧ 向きに折る */
+/* 左右のバーは回さず、わずかに内側へ寄って折れるだけ */
 .nav-toggle[aria-expanded="true"] span:nth-child(1) {
-    transform: translate(0, calc(3.5 * var(--u) - var(--r) * var(--u))) rotate(180deg);
+    transform: translate(0, calc(3.5 * var(--u) - var(--r) * var(--u)));
 }
+/* 中央は画面上で一切回さない。全体の90度回転を -90度で打ち消す分を「前半」に回して
+   （transition-delay: 0s）、回転と同時に相殺させ、水平のまま上へスライドさせる。
+   折れ（::before / ::after）だけが後半に残るので、見た目は「上に上がってV字に開く」だけになる。 */
 .nav-toggle[aria-expanded="true"] span:nth-child(2) {
-    transform: translate(calc(-1 * var(--r) * var(--u)), 0) rotate(90deg);
+    transform: translate(calc(-1 * var(--r) * var(--u)), 0) rotate(-90deg);
+    transition-delay: 0s;
 }
 .nav-toggle[aria-expanded="true"] span:nth-child(3) {
-    transform: translate(0, calc(var(--r) * var(--u) - 3.5 * var(--u))) rotate(0deg);
+    transform: translate(0, calc(var(--r) * var(--u) - 3.5 * var(--u)));
 }
 
 .nav-dropdown {
