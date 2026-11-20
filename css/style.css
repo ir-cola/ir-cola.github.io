@@ -147,37 +147,86 @@ img {
     position: relative;
 }
 
+/* ハンバーガー: 開くと ≡ → 90度回って ||| → 3本が折れて内向きのシェブロンに。
+   線は1本も消さず、3本がそれぞれ1つのシェブロンになる。
+   各バーは ::before(左半分) / ::after(右半分) に割り、中央を軸に開いて「へ」の字を作る。
+   半分ずつが中央で u/2 だけ重なるので、閉じているときは継ぎ目が見えない。 */
 .nav-toggle {
+    --u: 2px;                 /* 線の太さ＝全体の基準単位 */
+    --r: 2.4;                 /* 中心からシェブロンまでの距離（u 倍） */
+    --ang: 45deg;             /* 折れ角 */
+    --sc: 0.78;               /* 開いたときの腕の長さ */
     display: flex;
     background: none;
     border: none;
     cursor: pointer;
     flex-direction: column;
-    gap: 5px;
-    padding: 6px;
+    gap: calc(2.5 * var(--u));
+    padding: calc(3 * var(--u));
     align-items: center;
     justify-content: center;
     border-radius: 4px;
-    transition: background 0.2s;
+    /* 閉じるときは「伸びてから回る」ので回転を後ろにずらす */
+    transition: background 0.2s, transform 0.3s cubic-bezier(0.3, 0.7, 0.3, 1) 0.35s;
 }
 .nav-toggle:hover {
     background: rgba(255, 255, 255, 0.06);
 }
 .nav-toggle span {
+    position: relative;
     display: block;
-    width: 22px;
-    height: 2px;
-    background: var(--text);
-    transition: transform 0.3s, opacity 0.3s;
+    width: calc(11 * var(--u));
+    height: var(--u);
+    transition: transform 0.35s cubic-bezier(0.3, 0.7, 0.3, 1) 0s;
 }
+.nav-toggle span::before,
+.nav-toggle span::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background: var(--text);
+    border-radius: 999px;
+    transition: transform 0.35s cubic-bezier(0.3, 0.7, 0.3, 1) 0s;
+}
+.nav-toggle span::before {
+    left: 0;
+    width: calc(50% + var(--u) / 2);
+    transform-origin: calc(100% - var(--u) / 2) center;
+}
+.nav-toggle span::after {
+    right: 0;
+    width: calc(50% + var(--u) / 2);
+    transform-origin: calc(var(--u) / 2) center;
+}
+
+/* 開く: ① 全体が90度回転 ② 各バーが折れて散る（回転のぶんだけ遅らせる） */
+.nav-toggle[aria-expanded="true"] {
+    transform: rotate(90deg);
+    transition-delay: 0s, 0s;
+}
+.nav-toggle[aria-expanded="true"] span,
+.nav-toggle[aria-expanded="true"] span::before,
+.nav-toggle[aria-expanded="true"] span::after {
+    transition-delay: 0.3s;
+}
+.nav-toggle[aria-expanded="true"] span::before {
+    transform: rotate(calc(-1 * var(--ang))) scaleX(var(--sc));
+}
+.nav-toggle[aria-expanded="true"] span::after {
+    transform: rotate(var(--ang)) scaleX(var(--sc));
+}
+/* 縦3本になったときの左右位置を保ったまま内側へ折れる
+   （入れ替えると一番左の線が右端まで横断してしまう）
+   90度回転後の画面上の並び: 1本目=右 / 2本目=中央 / 3本目=左 */
 .nav-toggle[aria-expanded="true"] span:nth-child(1) {
-    transform: translateY(7px) rotate(45deg);
+    transform: translate(0, calc(3.5 * var(--u) - var(--r) * var(--u))) rotate(180deg);
 }
 .nav-toggle[aria-expanded="true"] span:nth-child(2) {
-    opacity: 0;
+    transform: translate(calc(-1 * var(--r) * var(--u)), 0) rotate(90deg);
 }
 .nav-toggle[aria-expanded="true"] span:nth-child(3) {
-    transform: translateY(-7px) rotate(-45deg);
+    transform: translate(0, calc(var(--r) * var(--u) - 3.5 * var(--u))) rotate(0deg);
 }
 
 .nav-dropdown {
