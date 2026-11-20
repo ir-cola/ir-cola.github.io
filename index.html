@@ -26,8 +26,10 @@
                 sessionStorage.setItem('introPlayed', '1');
             } catch (e) { return; }   // sessionStorage が使えない環境では演出なしで素通り
             document.documentElement.classList.add('intro-pending');
-            // 保険: intro.js が動かなくてもページが覆われたままにならないようにする
-            setTimeout(function () { document.documentElement.classList.remove('intro-pending'); }, 6000);
+            // 保険: intro.js が読み込めなかった場合だけ覆いを外す（演出中は intro.js が旗を立てている）
+            setTimeout(function () {
+                if (!window.__introReady) document.documentElement.classList.remove('intro-pending');
+            }, 3000);
         })();
     </script>
 </head>
@@ -37,6 +39,7 @@
 <div class="intro-root" id="intro" aria-hidden="true">
     <div class="intro-shards" id="intro-shards"></div>
     <svg class="intro-cracks" id="intro-cracks" preserveAspectRatio="none" aria-hidden="true"></svg>
+    <p class="intro-prompt" id="intro-prompt" data-ja="クリックして開く" data-en="Click to open">クリックして開く</p>
 </div>
 <img class="intro-logo" id="intro-logo" src="IR_favicon.png" alt="" aria-hidden="true">
 
