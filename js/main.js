@@ -405,6 +405,20 @@ const workData = {
         ],
         download: '',
     },
+    'fourorders': {
+        title: { ja: '4ORDERS', en: '4ORDERS' },
+        year: '2026',
+        tags: [{ ja: 'インターンシップ制作', en: 'Internship' }],
+        award: null,
+        env: '',
+        desc: {
+            ja: 'インターンシップで制作したゲーム。',
+            en: 'A game I built during an internship.'
+        },
+        video: { type: 'placeholder', src: '' },
+        screenshots: [],
+        download: '',
+    },
     'jump-beat': {
         title: { ja: 'あがれ！ジャンプビート', en: 'Agare! Jump Beat' },
         year: '2026',
